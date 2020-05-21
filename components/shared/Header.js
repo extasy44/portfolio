@@ -41,13 +41,13 @@ const Header = props => {
   return (
     <div>
       <Navbar
-        className="port-navbar port-default absolute"
+        className={`port-navbar port-nav-base absolute ${className}`}
         color="transparent"
         dark
         expand="md"
       >
         <NavbarBrand className="port-navbar-brand" href="/">
-          Heejun Seo
+          Heejun
         </NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse className="port-navbar-container" isOpen={isOpen} navbar>

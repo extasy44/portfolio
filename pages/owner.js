@@ -2,13 +2,15 @@ import React from "react";
 import BaseLayout from "../components/layouts/BaseLayout";
 import BasePage from "../components/BasePage";
 
-class About extends React.Component {
+import withAuth from "../components/hoc/withAuth";
+
+class Owner extends React.Component {
   render() {
     return (
       <div>
         <BaseLayout {...this.props.auth}>
-          <BasePage className="about-page" title="I am About Page">
-       
+          <BasePage>
+            <h1>I am Owner Page</h1>
           </BasePage>
         </BaseLayout>
       </div>
@@ -16,4 +18,4 @@ class About extends React.Component {
   }
 }
 
-export default About;
+export default withAuth('siteOwner')(Owner);

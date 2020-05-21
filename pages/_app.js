@@ -3,6 +3,7 @@ import App, { Container } from 'next/app';
 
 import auth0 from '../services/auth0';
 
+import "react-datepicker/dist/react-datepicker.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../styles/main.scss';
 
@@ -11,6 +12,7 @@ class MyApp extends App {
   
   static async getInitialProps({ Component, ctx }) {
     let pageProps = {};
+    
     const user = process.browser
       ? await auth0.clientAuth()
       : await auth0.serverAuth(ctx.req);
@@ -18,8 +20,7 @@ class MyApp extends App {
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx);
     }
-
-    const auth = { user: !!user, isAuthenticated: !!user };
+    const auth = { isAuthenticated: user, user: !!user };
 
     return { pageProps, auth };
   }
@@ -28,9 +29,9 @@ class MyApp extends App {
     const { Component, pageProps, auth } = this.props;
 
     return (
-      <Container>
-        <Component {...pageProps} auth={auth} />
-      </Container>
+
+        <Component {...pageProps} auth={ auth } />
+
     );
   }
 }

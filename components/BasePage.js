@@ -4,12 +4,17 @@ import {
 
 
 const BasePage = props => {
-  const { children, className } = props;
+  const { title, className, children } = props;
 
   return (
     <div className={`base-page ${className}`}>
       <Container>
-        { children }
+        {title && (
+          <div className="page-header">
+            <h1> {title} </h1>
+          </div>
+        )}
+        {children}
       </Container>
     </div>
   );

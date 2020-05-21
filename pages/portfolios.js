@@ -1,5 +1,6 @@
 import React from "react";
 import Link  from "next/link";
+import { Col, Row, Card, CardHeader, CardBody, CardTitle, CardText } from 'reactstrap';
 
 import axios from "axios";
 
@@ -11,24 +12,44 @@ class Portfolios extends React.Component {
   static async getInitialProps(){
     let posts=[];
     try{
-      const res = await axios.get('https://jsonplaceholder.typicode.com/posts');
-      posts = res.data;
-    }catch(e){
-      console.log(e);
+      const response = await axios.get('https://jsonplaceholder.typicode.com/posts');
+      posts = response.data;
+    }catch(err){
+      console.error(err);
     }
 
-    return { posts: posts.slice(0, 10)};
+    return { posts: posts.splice(0, 10)};
   }
 
     renderPosts(posts){
-        if(!posts){ return <div>Loading...</div>}
-        return posts.map((post) => (
-          <li key={post.id} style={{ fontSize: "20px" }}>
-            <Link routes={`/portfolios/${post.id}`}>
-              <a>{post.title}</a>
-            </Link>
-          </li>
-        ));
+        return posts.map((post, index) => {
+          return (
+            <Col md="4">
+              <React.Fragment key={index}>
+                <span>
+                  <Card className="portfolio-card">
+                    <CardHeader className="portfolio-card-header">
+                      Some Position {index}
+                    </CardHeader>
+                    <CardBody>
+                      <p className="portfolio-card-city">
+                        {" "}
+                        Some Location {index}{" "}
+                      </p>
+                      <CardTitle className="portfolio-card-title">
+                        Some Company {index}
+                      </CardTitle>
+                      <CardText className="portfolio-card-text">
+                        Some Description {index}
+                      </CardText>
+                      <div className="readMore"> </div>
+                    </CardBody>
+                  </Card>
+                </span>
+              </React.Fragment>
+            </Col>
+          );
+        });
     }
     
     render() {
@@ -36,10 +57,9 @@ class Portfolios extends React.Component {
 
         return (
           <div>
-            <BaseLayout>
-              <BasePage>
-                <h1>Portfolios Page</h1>
-                <ul>{this.renderPosts(posts)}</ul>
+            <BaseLayout {...this.props.auth}>
+              <BasePage className="portfolio-page" title="Portfolios">
+                <Row>{this.renderPosts(posts)}</Row>
               </BasePage>
             </BaseLayout>
           </div>

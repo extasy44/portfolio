@@ -38,8 +38,6 @@ class Auth0 {
     let expiresAt = JSON.stringify(
       authResult.expiresIn * 1000 + new Date().getTime()
     );
-    // localStorage.setItem('id_token', authResult.idToken);
-    // localStorage.setItem('expires_at', expiresAt);
 
     Cookies.set("user", authResult.idTokenPayload);
     Cookies.set("jwt", authResult.idToken);
