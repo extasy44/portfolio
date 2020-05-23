@@ -3,16 +3,27 @@ import { Formik, Form, Field } from "formik";
 import PortInput from '../form/PortInput';
 import PortDate from '../form/PortDate';
 
-const validateInputs = (values) => {
-     const errors = {};
+import moment from "moment";
 
-     Object.entries(values).forEach(([key, value]) => {
-        console.log(key);
-        if(!values[key] && values[key] === 'startDate' || values[key] === 'endDate'){
-            errors[key] = `Field ${key} is required!`
-        }
-     })
-     return errors;
+import { Button } from "reactstrap";
+
+const validateInputs = (values) => {
+  let errors = {};
+
+  Object.entries(values).forEach(([key, value]) => {
+    if (!values[key] && key !== "endDate") {
+      errors[key] = `Field ${key} is required!`;
+    }
+  });
+
+  const startDate = moment(values.startDate);
+  const endDate = moment(values.endDate);
+
+  if (startDate && endDate && endDate.isBefore(startDate)) {
+    errors.endDate = "End Date cannot be before start date!!!";
+  }
+
+  return errors;
 };
 
 const INITIAL_VALUES = {
@@ -25,17 +36,12 @@ const INITIAL_VALUES = {
   endDate:""
 };
 
-const PortfolioCreateForm = () => (
+const PortfolioCreateForm = (props) => (
   <div>
     <Formik
       initialValues={INITIAL_VALUES}
       validate={validateInputs}
-      onSubmit={(values, { setSubmitting }) => {
-        setTimeout(() => {
-          alert(JSON.stringify(values, null, 2));
-          setSubmitting(false);
-        }, 400);
-      }}
+      onSubmit={props.onSubmit}
     >
       {({ isSubmitting }) => (
         <Form>
@@ -65,11 +71,11 @@ const PortfolioCreateForm = () => (
             component={PortInput}
           />
           <Field label="Start Date" name="startDate" component={PortDate} />
-          <Field label="End Date" name="endDate" component={PortDate} />
+          <Field label="End Date" name="endDate" canBeDisabled={true} component={PortDate} />
 
-          <button type="submit" disabled={isSubmitting}>
-            Create Portfolio
-          </button>
+          <Button color="success" size="LG" type="submit" disabled={isSubmitting}>
+            Create
+          </Button >
         </Form>
       )}
     </Formik>

@@ -1,5 +1,6 @@
 const express = require("express");
 const next = require("next");
+const mongoose = require("mongoose");
 const routes = require("../routes");
 
 const authService = require("./services/auth");
@@ -20,10 +21,16 @@ const secretData = [
   },
 ];
 
+mongoose
+  .connect(
+    "mongodb+srv://heejun:wns7267@cluster0-r93cl.mongodb.net/test?retryWrites=true&w=majority",
+    { useNewUrlParser: true }
+  )
+  .then(() => console.log("Database connected!"))
+  .catch((error) => console.log(error));
+
 app.prepare().then(() => {
   const server = express();
-
-
 
   server.get("/api/v1/secret", authService.checkJWT, (req, res) => {
     return res.json(secretData);

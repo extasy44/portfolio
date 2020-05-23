@@ -1,56 +1,88 @@
 import React from "react";
 import DatePicker from "react-datepicker";
 
-import { FormGroup, Label } from "reactstrap";
+import { FormGroup, Label, Button } from "reactstrap";
 
 import moment from "moment";
 
 export default class PortDate extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      dateValue: new Date(),
-    };
-  }
+                 constructor(props) {
+                   super(props);
+                   this.state = {
+                     dateValue: new Date(),
+                     isHidden: false,
+                   };
+                 }
 
-  handleChange = (date) => {
- 
-    const { setFieldValue, setFieldTouched } = this.props.form;
-    const { name } = this.props.field;
 
-    this.setState({
-      dateValue: date,
-    });
+                 setFieldValueAndTouched(date, touched) {
+                     const { setFieldValue, setFieldTouched } = this.props.form;
+                     const { name } = this.props.field;
 
-    setFieldValue(name, date, true);
-    setFieldTouched(name, true, true);
-  };
+                     setFieldValue(name, date, true);
+                     setFieldTouched(name, touched, true);
+                 }
 
-  render() {
-    const {
-      label,
-      field,
-      form: { touched, errors },
-    } = this.props;
+                 handleChange = (date) => {
+                   this.setState({
+                     dateValue: date,
+                   });
 
-    return (
-      <FormGroup>
-        <Label>{label}</Label>
-        <div className="input-group">
-          <DatePicker
-            selected={this.state.dateValue}
-            onChange={this.handleChange}
-            peekNextMounth
-            showMonthDropdown
-            showYearDropdown
-            maxDate={moment()}
-            dropdownMode="select"
-          />
-          {touched[field.name] && errors[field.name] && (
-            <div className="error">{errors[field.name]}</div>
-          )}
-        </div>
-      </FormGroup>
-    );
-  }
-}
+                   this.setFieldValueAndTouched(date, true);
+                 };
+
+                 toggleDate(date) {
+                   this.setState({
+                     isHidden: !this.state.isHidden,
+                   });
+
+                   this.setFieldValueAndTouched(date, true);
+                 }
+
+                 render() {
+                   const {
+                     canBeDisabled,
+                     label,
+                     field,
+                     form: { touched, errors },
+                   } = this.props;
+
+                   const { isHidden, dateValue } = this.state;
+
+                   return (
+                     <FormGroup>
+                       <Label>{label}</Label>
+                       <div className="input-group">
+                         {!isHidden && (
+                           <DatePicker
+                             selected={dateValue}
+                             onChange={this.handleChange}
+                             peekNextMounth
+                             showMonthDropdown
+                             showYearDropdown
+                             maxDate={moment()}
+                             dropdownMode="select"
+                           />
+                         )}
+                         {canBeDisabled && !isHidden && (
+                           <Button onClick={() => this.toggleDate()}>
+                             Still working here
+                           </Button>
+                         )}
+
+                         {canBeDisabled && isHidden && (
+                           <React.Fragment>
+                             <span>Still working here</span>
+                             <Button onClick={() => this.toggleDate(dateValue)}>
+                               Set EndDate
+                             </Button>
+                           </React.Fragment>
+                         )}
+                         {touched[field.name] && errors[field.name] && (
+                           <div className="error">{errors[field.name]}</div>
+                         )}
+                       </div>
+                     </FormGroup>
+                   );
+                 }
+               }
